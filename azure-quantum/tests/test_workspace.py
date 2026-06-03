@@ -358,7 +358,6 @@ def test_create_workspace_instance_invalid():
         except ValueError as e:
             assert "Invalid resource id" in e.args[0]
 
-
 def test_workspace_cancel_job_success():
     ws = WorkspaceMock(
         subscription_id=SUBSCRIPTION_ID,
@@ -382,7 +381,38 @@ def test_workspace_cancel_job_success():
     result = ws.cancel_job(job)
 
     assert result.details.status == "Cancelled"
+    assert result.id == job_id   
+
+def test_workspace_update_job_success():
+    ws = WorkspaceMock(
+        subscription_id=SUBSCRIPTION_ID,
+        resource_group=RESOURCE_GROUP,
+        name=WORKSPACE,
+    )
+
+    job_id = "test-update-success"
+    details = JobDetails(
+        id=job_id,
+        container_uri="https://example.com/container",
+        input_data_format="microsoft.resource-estimate.v2",
+        provider_id="ionq",
+        target="ionq.simulator",
+        status="Waiting",
+        
+
+        name="original-name",
+        tags=["original-tag"],
+        priority="Normal",
+    )
+    ws._client.services.jobs._store.append(details)
+
+    job = Job(ws, details)
+    result = ws.update_job(job, name="updated-name", tags=["tag1"], priority="High")
+
     assert result.id == job_id
+    assert result.details.name == "updated-name"
+    assert result.details.tags == ["tag1"]
+    assert result.details.priority == "High"
 
 
 def test_workspace_user_agent_appid():

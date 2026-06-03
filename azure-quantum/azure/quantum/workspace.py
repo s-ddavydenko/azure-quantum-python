@@ -26,6 +26,7 @@ from azure.core.exceptions import HttpResponseError
 from azure.core.paging import ItemPaged
 from azure.quantum._client import WorkspaceClient
 from azure.quantum._client.models import JobDetails, ItemDetails, SessionDetails
+from azure.quantum._client.models import JobUpdateOptions
 from azure.quantum._client.operations._operations import (
     ServicesJobsOperations,
     ServicesStorageOperations,
@@ -457,6 +458,37 @@ class Workspace:
             if e.status_code != 204:
                 raise
 
+        details = client.get(
+            self.subscription_id,
+            self.resource_group,
+            self.name,
+            job.id)
+        return Job(self, details)
+
+    def update_job(self, job: Job, priority=None, name=None, tags=None) -> Job:
+        """
+        Updates mutable properties of a submitted job.
+
+        :param job:
+            Job to update.
+        :param priority:
+            New priority for the job. Known values are "Standard" and "High".
+        :param name:
+            New display name for the job.
+        :param tags:
+            New list of tags for the job.
+
+        :return: Azure Quantum Job with updated details.
+        :rtype: Job
+        """
+        
+        client = self._get_jobs_client()
+        client.update(
+            self.subscription_id,
+            self.resource_group,
+            self.name,
+            job.details.id,
+            JobUpdateOptions(priority=priority, name=name, tags=tags))
         details = client.get(
             self.subscription_id,
             self.resource_group,

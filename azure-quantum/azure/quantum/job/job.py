@@ -56,6 +56,11 @@ class Job(BaseJob, FilteredJob):
         """Refreshes the Job's details by querying the workspace."""
         self.details = self.workspace.get_job(self.id).details
 
+    def update(self, priority=None, name=None, tags=None):
+        """Updates mutable properties of the job."""
+        job = self.workspace.update_job(self, priority=priority, name=name, tags=tags)
+        self.details = job.details
+
     def has_completed(self) -> bool:
         """Check if the job has completed."""
         return (
