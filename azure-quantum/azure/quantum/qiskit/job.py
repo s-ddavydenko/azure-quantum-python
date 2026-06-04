@@ -108,6 +108,10 @@ class AzureQuantumJob(JobV1):
         """Attempt to cancel the job."""
         self._workspace.cancel_job(self._azure_job)
 
+    def update(self, priority=None, name=None, tags=None) -> None:
+        """Updates mutable properties of the job."""
+        self._workspace.update_job(self._azure_job.id, priority=priority, name=name, tags=tags)
+
     def status(self):
         """Return the status of the job, among the values of ``JobStatus``."""
         self._azure_job.refresh()

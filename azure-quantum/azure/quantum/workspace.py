@@ -465,12 +465,12 @@ class Workspace:
             job.id)
         return Job(self, details)
 
-    def update_job(self, job: Job, priority=None, name=None, tags=None) -> Job:
+    def update_job(self, job_id: str, priority=None, name=None, tags=None) -> Job:
         """
         Updates mutable properties of a submitted job.
 
-        :param job:
-            Job to update.
+        :param job_id:
+            ID of the job to update.
         :param priority:
             New priority for the job. Known values are "Standard" and "High".
         :param name:
@@ -487,13 +487,13 @@ class Workspace:
             self.subscription_id,
             self.resource_group,
             self.name,
-            job.details.id,
+            job_id,
             JobUpdateOptions(priority=priority, name=name, tags=tags))
         details = client.get(
             self.subscription_id,
             self.resource_group,
             self.name,
-            job.id)
+            job_id)
         return Job(self, details)
 
     def get_job(self, job_id: str) -> Job:

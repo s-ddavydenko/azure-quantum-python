@@ -148,6 +148,10 @@ class Job:
         """Cancel the given job."""
         self._azure_job.workspace.cancel_job(self._azure_job)
 
+    def update(self, priority=None, name=None, tags=None) -> None:
+        """Updates mutable properties of the job."""
+        self._azure_job.workspace.update_job(self._azure_job.id, priority=priority, name=name, tags=tags)
+
     def delete(self):
         """Delete the given job."""
         self._azure_job.workspace.cancel_job(self._azure_job)

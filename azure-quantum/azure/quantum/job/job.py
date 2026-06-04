@@ -58,7 +58,7 @@ class Job(BaseJob, FilteredJob):
 
     def update(self, priority=None, name=None, tags=None):
         """Updates mutable properties of the job."""
-        job = self.workspace.update_job(self, priority=priority, name=name, tags=tags)
+        job = self.workspace.update_job(self.id, priority=priority, name=name, tags=tags)
         self.details = job.details
 
     def has_completed(self) -> bool:
